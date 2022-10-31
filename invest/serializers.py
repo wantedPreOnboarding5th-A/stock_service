@@ -1,3 +1,4 @@
+from attr import field
 from rest_framework import serializers
 
 from invest.models import Account, InvestInfo, Stock
@@ -21,16 +22,12 @@ class InvestInfoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InvestInfoResSchema(serializers.Serializer):
-    pass
+class InvestAccountStockListSerializer(serializers.ModelSerializer):
+    """조인 전용 Serializer"""
 
-
-class InvestAccountStockSerializer(serializers.ManyRelatedField):
     stocks = StockSerializer(many=True, read_only=True)
     accounts = AccountSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Stock
-        fields = ["isin_number"]
-        model = Account
-        fields = "__all__"
+        model = InvestInfo
+        fields = ["stocks", "accounts", "current_price", "amount"]
