@@ -29,7 +29,7 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
         현금도 포함합니다.
         """
 
-    def find_by_account_number(self,account_number: str) -> list:
+    def find_by_account_number(self, account_number: str) -> list:
         # 테이블 3개 조인
         try:
             invest_info_list = (

@@ -1,6 +1,5 @@
 from invest.repository import AbstractInvestInfoRepo, StockRepo
 from invest.serializers import InvestInfoDetailResSchema, InvestInfoResSchema
-
 from .models import Account
 
 
