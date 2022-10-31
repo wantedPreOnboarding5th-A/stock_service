@@ -1,6 +1,5 @@
 from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
 from user.repository import UserRepo
-
 from .models import Account
 
 

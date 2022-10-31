@@ -1,6 +1,5 @@
 from rest_framework import serializers
-
-from .models import Stock, InvestInfo, Account
+from invest.models import Account, InvestInfo, Stock
 
 
 class StockSerializer(serializers.ModelSerializer):
