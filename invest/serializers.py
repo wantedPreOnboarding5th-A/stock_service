@@ -19,3 +19,18 @@ class InvestInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvestInfo
         fields = "__all__"
+
+
+class InvestInfoResSchema(serializers.Serializer):
+    pass
+
+
+class InvestAccountStockSerializer(serializers.ManyRelatedField):
+    stocks = StockSerializer(many=True, read_only=True)
+    accounts = AccountSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Stock
+        fields = ["isin_number"]
+        model = Account
+        fields = "__all__"
