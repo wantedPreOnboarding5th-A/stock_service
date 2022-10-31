@@ -30,6 +30,7 @@ def get_invest_info(request, account_number: str):
 def get_invest_detail(request, account_number: int):
     return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
 
+
 # 보유 종목 요청 API
 @api_view(["GET"])
 @parser_classes([JSONParser])
