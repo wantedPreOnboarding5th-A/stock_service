@@ -1,11 +1,14 @@
-<<<<<<< HEAD
 from invest.exceptions import NotFoundError
-from invest.models import Account, InvestInfo
+from invest.models import Account, InvestInfo, Stock
 from invest.serializers import (
     AccountSerializer,
     InvestAccountStockListSerializer,
     InvestInfoSerializer,
+    StockSerializer,
 )
+from typing import List
+
+from .utils.exceptions import NotFoundError
 
 invest_acc_stock_serializer = InvestAccountStockListSerializer
 
@@ -90,35 +93,23 @@ class AccountRepo:
             return invest_acc_stock_serializer(cash_info).data
         except self.model.DoesNotExist:
             raise NotFoundError
-=======
-from typing import List
-
-from .models import Stock
-from .serializers import StockSerializer
-
-from .utils.exceptions import NotFoundError
->>>>>>> 2104b3c ([feat] 보유 종목 API 작성중)
 
 
 class StockRepo:
     def __init__(self) -> None:
-<<<<<<< HEAD
-        self.serilaizer = AccountSerializer
-        self.model = Account
-
-    def get(self, stock_id: int) -> dict:
-        try:
-            return self.serilaizer(self.model.objects.get(id=stock_id))
-=======
         self.model = Stock
         self.serializer = StockSerializer
 
     def get_list_by_account_id(self, accout_id: List[int]) -> dict:
         try:
+            res = []
+
             for account in accout_id:
                 created = self.serializer(
                     self.model.objects.prefetch_related("investinfo_set").filter(accout_id=account)
                 ).data
->>>>>>> 2104b3c ([feat] 보유 종목 API 작성중)
+                res.append(created)
+
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError
