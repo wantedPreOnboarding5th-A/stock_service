@@ -13,9 +13,14 @@ class StockRepo:
 
     def get_list_by_account_id(self, accout_id: List[int]) -> dict:
         try:
+            res = []
+
             for account in accout_id:
                 created = self.serializer(
                     self.model.objects.prefetch_related("investinfo_set").filter(accout_id=account)
                 ).data
+                res.append(created)
+
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError
