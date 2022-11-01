@@ -1,6 +1,34 @@
 from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
 from user.repository import UserRepo
 
+from .models import Account
+
+
+class StockService:
+    def __init__(self) -> None:
+        self.stock_repo = StockRepo()
+
+    def get_stock_held_list(self, user_id: int) -> dict:
+        account_ids = Account.objects.filter(user_id=user_id)
+        params = []
+
+        for account_id in account_ids:
+            params.append(account_id.id)
+
+        repos = self.stock_repo.get_list_by_account_id(accout_id=params)
+
+        res = [
+            {
+                "name": repo["name"],
+                "group": repo["group"],
+                "evaluation_amount": repo["amount"] * repo["current_price"],
+                "isin_number": repo["isin_number"],
+            }
+            for repo in repos
+        ]
+
+        return res
+
 
 invest_info_repo = InvestInfoRepo()
 account_repo = AccountRepo()
@@ -63,32 +91,6 @@ class InvestManagementSerivice:
         }
 
         return data
-
-
-class StockService:
-    def __init__(self) -> None:
-        self.stock_repo = StockRepo()
-
-    def get_stock_held_list(self, user_id: int) -> dict:
-        account_ids = Account.objects.filter(user_id=user_id)
-        params = []
-
-        for account_id in account_ids:
-            params.append(account_id.id)
-
-        repos = self.stock_repo.get_list_by_account_id(accout_id=account_id)
-
-        res = [
-            {
-                "name": repo["name"],
-                "group": repo["group"],
-                "evaluation_amount": repo["amount"] * repo["current_price"],
-                "isin_number": repo["isin_number"],
-            }
-            for repo in repos
-        ]
-
-        return res
 
 
 invest_info_repo = InvestInfoRepo()
