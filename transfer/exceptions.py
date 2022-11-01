@@ -18,3 +18,19 @@ class AlreadyPayedError(CustomBaseExecption):
     def __init__(self):
         self.msg = "This Transfer is already Paied"
         self.status = status.HTTP_400_BAD_REQUEST
+
+
+class DoesNotSameName(CustomBaseExecption):
+    def __init__(self):
+        self.msg = "The Name does not same"
+        self.status = status.HTTP_400_BAD_REQUEST
+
+
+class NotFoundErrorAccount(CustomBaseExecption):
+    def __init__(self):
+        self.msg = "Data Not Found. Account-Number"
+
+
+class NotFoundErrorTransfer(CustomBaseExecption):
+    def __init__(self):
+        self.msg = "Data Not Found. Transfer-Number"

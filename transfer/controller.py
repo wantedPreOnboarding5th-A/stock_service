@@ -1,10 +1,13 @@
 from django.http import JsonResponse
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework import status
 from transfer.serializers import TransferSchema, TransferIDSchema
 from transfer.service import TransferService, PayService
+from decorators.execption_handler import execption_hanlder
+from decorators.auth_handler import must_be_user
+from transfer.exceptions import DoesNotSameName
 
 transfer_service = TransferService()
 pay_service = PayService()
@@ -14,6 +17,8 @@ class TransferAPI(APIView):
         return transfer(request)
 
 
+@execption_hanlder()
+@must_be_user()
 @parser_classes([JSONParser])
 def transfer(request):
     """
@@ -25,15 +30,21 @@ def transfer(request):
     params = request.data
     params = TransferSchema(data=params)
     params.is_valid(raise_exception=True)
+    
+    if request.user["name"] != params.data["user_name"]:
+        raise DoesNotSameName()
+
     create_transfer = transfer_service.create(**params.data)
     return JsonResponse({"transfer_identifier": create_transfer["id"]}, status=status.HTTP_201_CREATED)
 
-
+  
 class PayAPI(APIView):
     def post(self, request):
         return pay(request)
 
 
+@execption_hanlder()
+@must_be_user()
 @parser_classes([JSONParser])
 def pay(request):
     """

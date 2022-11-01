@@ -25,7 +25,7 @@ class TransferIDSchema(serializers.Serializer):
     """
     
     transfer_identifier = serializers.IntegerField()
-    signature = serializers.CharField(max_length = 250)
+    signature = serializers.CharField(max_length = 300)
 
 
 class PayforTransSchema(serializers.Serializer):
