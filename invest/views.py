@@ -45,5 +45,4 @@ def get_list(request):
     auth_token = request.META.get("HTTP_AUTHORIZATION", None)
     decoded = auth_provider._decode(token=auth_token)
     user_id = decoded["id"]
-
     return JsonResponse(stock_service.get_stock_held_list(user_id=user_id), safe=False)
