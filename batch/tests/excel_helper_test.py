@@ -78,7 +78,7 @@ invalid_account_basic_info_test_set = [
     {
         "account_number": "12345",
         "investment_principal": "1911386",
-    },  # 계좌번호는 정확히 13자리여야함
+    },  # 계좌번호는 12자리 또는 13자리 여야함
     {
         "account_number": "5608672867775",
         "investment_principal": "-2",
@@ -129,7 +129,7 @@ invalid_account_asset_info_test_set = [
     {
         "user_name": "류영길",
         "brokerage": "디셈버증권",
-        "number": "736692368320",  # 계좌번호는 13자리여야함
+        "number": "73669236",  # 계좌번호는 12 또는 13자리여야함
         "account_name": "계좌1",
         "isin_number": "KR713369000",  # isin은 12자리거나 CASH 여야함
         "current_price": "14459",

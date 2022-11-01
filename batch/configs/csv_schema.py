@@ -1,31 +1,23 @@
+from typing import Union
 from pydantic import BaseModel
 from pydantic import BaseModel, ValidationError
 
 
 def _validate_is_numeric_str(data: str):
-    if data.isnumeric():
+
+    if isinstance(data, int) or data.isnumeric():
         return True
     else:
         raise ValidationError("Not a Number string")
 
 
-def _str_must_be_given_digit_validator(v, digit_cnt: int, exception_value: str = None):
-    if (len(v) == digit_cnt) or (exception_value != None and exception_value == v):
-        return v.title()
+def _validate_account_number(account_number: Union[int, str]):
+    _validate_is_numeric_str(account_number)  # raise error if not valid
+    str_number = str(account_number)
+    if len(str_number) >= 12 and len(str_number) <= 13:
+        return str_number
     else:
-        raise ValidationError(f"str must be {digit_cnt} digit")
-
-
-def _validate_number_str(v, digit_cnt: int = None, exception_value: str = None):
-    _validate_is_numeric_str(v)  # raise error if not valid
-    number = int(v)
-    if digit_cnt != None:
-        return _str_must_be_given_digit_validator(v, digit_cnt, exception_value)
-    else:
-        if number >= 0:
-            return v
-        else:
-            raise ValidationError("Number must be bigger than or same 0")
+        raise ValidationError("account number must be 12 or 13 digit number")
 
 
 class NameFiled(str):
@@ -48,8 +40,7 @@ class AccountNumber(str):
 
     @classmethod
     def validate_acccount_number(cls, acccount_number: str) -> str:
-        if _validate_number_str(acccount_number, 13):  # 올바르지 않은 경우 raise error
-            return acccount_number
+        return _validate_account_number(acccount_number)  # 올바르지 않은 경우 raise error
 
 
 class ISIN(str):
@@ -65,18 +56,18 @@ class ISIN(str):
             raise ValidationError("Invalid ISIN")
 
 
-class PositiveIntString(str):
+class PositiveInt(str):
     @classmethod
     def __get_validators__(cls):
         yield cls.validate_positive_int
 
     @classmethod
-    def validate_positive_int(cls, number: str) -> str:
+    def validate_positive_int(cls, number: Union[str, int]) -> str:
         _validate_is_numeric_str(number)  # raise error if not valid
         int_number = int(number)
 
         if int_number >= 0:
-            return number
+            return int_number
         else:
             raise ValidationError("Number must be bigger than or same 0")
 
@@ -89,7 +80,7 @@ class CustomBaseModel(BaseModel):
 
 class AccountBasicInfoSchema(CustomBaseModel):
     account_number: AccountNumber
-    investment_principal: PositiveIntString
+    investment_principal: PositiveInt
 
 
 class AccountAssetInfoSchema(CustomBaseModel):
@@ -98,8 +89,8 @@ class AccountAssetInfoSchema(CustomBaseModel):
     number: AccountNumber
     account_name: NameFiled
     isin_number: ISIN
-    current_price: PositiveIntString
-    amount: PositiveIntString
+    current_price: PositiveInt
+    amount: PositiveInt
 
 
 class AssetGroupInfoSchema(CustomBaseModel):
