@@ -98,7 +98,6 @@ class StockRepo:
                     self.model.objects.prefetch_related("investinfo_set").filter(accout_id=account)
                 ).data
                 res.append(created)
-
             return res
         except self.model.DoesNotExist:
             raise NotFoundError

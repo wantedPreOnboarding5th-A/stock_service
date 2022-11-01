@@ -13,7 +13,19 @@ class StockService:
         for account_id in account_ids:
             params.append(account_id.id)
 
-        return self.stock_repo.get_list_by_account_id(accout_id=account_id)
+        repos = self.stock_repo.get_list_by_account_id(accout_id=account_id)
+
+        res = [
+            {
+                "name": repo["name"],
+                "group": repo["group"],
+                "evaluation_amount": repo["amount"] * repo["current_price"],
+                "isin_number": repo["isin_number"],
+            }
+            for repo in repos
+        ]
+
+        return res
 
 
 invest_info_repo = InvestInfoRepo()
