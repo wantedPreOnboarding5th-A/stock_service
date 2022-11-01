@@ -33,7 +33,7 @@ class ExcelHandler:
         try:
             fields_names = schema.get_fields_name_list()
             mapped_data = dict(zip(fields_names, data))
-            validated_data = schema(**mapped_data)
+            validated_data = schema(**mapped_data)  # 조건 충족하지 않을 경우 ValidationError 발생
             return validated_data.dict()
         except ValidationError as e:
             return None
@@ -50,10 +50,7 @@ class ExcelHandler:
         self, filename: str, schema: CustomBaseModel
     ) -> list[dict]:
         data_list = self._read_excel(filename)
-        if len(data_list):
-            return self._parse_data_list(data_list, schema)
-        else:
-            return []
+        return self._parse_data_list(data_list, schema) if len(data_list) else []
 
     def get_all_data_sets(self) -> dict:
         data_dict = dict()
