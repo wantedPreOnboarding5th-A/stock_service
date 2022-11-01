@@ -27,7 +27,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUserModel
         fields = "__all__"
 
-
 class UserSignUpSchema(serializers.Serializer):
     """
     user 회원가입 기능 요청 정의 입니다.

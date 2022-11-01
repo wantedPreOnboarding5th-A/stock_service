@@ -54,7 +54,8 @@ class InvestInfoRepo:
                 .filter(account__number__exact=account_number)
                 .exclude(stock__isin_number__exact="CASH")
             )
-            # 리스트가 비어있을시 오류 출력
+
+            # 비어있을시 오류 출력
             if not invest_info_list.values():
                 raise NotFoundError
 

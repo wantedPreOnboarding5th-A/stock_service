@@ -1,14 +1,17 @@
 from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
+from user.repository import UserRepo
 
 
 invest_info_repo = InvestInfoRepo()
 account_repo = AccountRepo()
 stock_repo = StockRepo()
+user_repo = UserRepo()
 
 
 class InvestManagementSerivice:
     def get_invest_info(self, account_number: int) -> dict:
         invest_info_list = invest_info_repo.find_by_account_number(account_number=account_number)
+        user_info = user_repo.get_by_account_number(account_number=account_number)
         # filter, .select_related, 자동 캐싱된다.
         all_assets = 0
         for i in invest_info_list:
@@ -18,9 +21,7 @@ class InvestManagementSerivice:
         account_name = invest_info_list[1]["name"]
         brokerage = invest_info_list[1]["brokerage"]
         account_number = invest_info_list[1]["number"]
-        
-        # 유저쪽 이름 가져오기
-        user_name = "str"
+        user_name = user_info["name"]
 
         data = {
             "user_name": user_name,
@@ -48,7 +49,7 @@ class InvestManagementSerivice:
         total_profit = all_assets - investment_principal
         profit_percentage = (total_profit / investment_principal) * 100
 
-        # 유저쪽 이름 가져오기
+        # 유저쪽 이름 가져오기 #TODO 하드코딩 되어있음
         user_name = "str"
 
         data = {
