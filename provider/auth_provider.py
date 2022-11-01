@@ -8,7 +8,6 @@ from exceptions import (
     NotAuthorizedError,
     TokenExpiredError,
 )
-from user.enums import UserType
 from datetime import datetime
 import bcrypt
 
@@ -76,16 +75,6 @@ class AuthProvider:
         except Exception as e:
             if isinstance(e, NotFoundError):
                 raise NotAuthorizedError
-
-    def check_is_admin(self, token: str, no_execption: bool = False):
-        decoded = self._decode(token)
-        user = user_repo.get(decoded["id"])
-        if user["user_type"] == UserType.ADMIN.value:
-            return True
-        if no_execption:
-            return False
-        else:
-            raise NoPermssionError
 
 
 auth_provider = AuthProvider()
