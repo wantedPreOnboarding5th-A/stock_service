@@ -1,4 +1,3 @@
-from attr import field
 from rest_framework import serializers
 
 from invest.models import Account, InvestInfo, Stock
