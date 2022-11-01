@@ -95,5 +95,14 @@ class StockRepo(AbstractStockRepo):
     def get(self, stock_id: int) -> dict:
         try:
             return self.serializer(self.model.objects.get(id=stock_id))
+            res = []
+
+            for account in accout_id:
+                created = self.serializer(
+                    self.model.objects.prefetch_related("investinfo_set").filter(accout_id=account)
+                ).data
+                res.append(created)
+
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError
