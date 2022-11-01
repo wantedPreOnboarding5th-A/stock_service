@@ -14,7 +14,6 @@ invest_management_service = InvestInfoManagementSerivice(
     invest_info_repo=InvestInfoRepo, user_repo=UserRepo
 )
 
-
 stock_service = StockService()
 auth_provider = AuthProvider()
 
@@ -46,4 +45,5 @@ def get_list(request):
     auth_token = request.META.get("HTTP_AUTHORIZATION", None)
     decoded = auth_provider._decode(token=auth_token)
     user_id = decoded["id"]
+
     return JsonResponse(stock_service.get_stock_held_list(user_id=user_id), safe=False)
