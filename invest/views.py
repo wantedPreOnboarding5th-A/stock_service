@@ -2,10 +2,12 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
-from invest.service import InvestManagementSerivice
+from invest.repository import InvestInfoRepo
+
+from invest.service import InvestInfoManagementSerivice
 
 # Create your views here.
-invest_management_service = InvestManagementSerivice()
+invest_management_service = InvestInfoManagementSerivice(repo=InvestInfoRepo)
 
 @api_view(["GET"])
 @parser_classes([JSONParser])

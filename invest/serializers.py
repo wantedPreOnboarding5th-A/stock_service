@@ -1,4 +1,3 @@
-from attr import field
 from rest_framework import serializers
 
 from invest.models import Account, InvestInfo, Stock
@@ -23,7 +22,7 @@ class InvestInfoSerializer(serializers.ModelSerializer):
 
 
 class InvestAccountStockListSerializer(serializers.ModelSerializer):
-    """조인 전용 Serializer"""
+    """Join 전용 Serializer"""
 
     stocks = StockSerializer(many=True, read_only=True)
     accounts = AccountSerializer(many=True, read_only=True)

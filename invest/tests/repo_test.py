@@ -2,37 +2,62 @@ from django.conf import settings
 import pytest
 from invest.models import Account, InvestInfo, Stock
 from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
+from invest.tests.fake_repo import MockAccountRepo, MockInvestInfoRepo, MockStockRepo, MockUserRepo
 from user.models import User
 from user.repository import UserRepo
 
 # Create your tests here.
-invest_info_repo = InvestInfoRepo()
-account_repo = AccountRepo()
-stock_repo = StockRepo()
-user_repo = UserRepo()
+mock_invest_info_repo = MockInvestInfoRepo()
+mock_account_repo = MockAccountRepo()
+mock_stock_repo = MockStockRepo()
+mock_user_repo = MockUserRepo()
+
+board_service = BoardService(repo=fake_post_repo)
+
 
 @pytest.fixture(scope="session")
-def django_db_setup():
-    settings.DATABASES
+def set_up_fake_db():
+        mock_invest_info_repo.in_memory_db = dict()
+        mock_account_repo.in_memory_db = dict()
+        mock_stock_repo.in_memory_db = dict()
+        mock_user_repo.in_memory_db = dict()
+    fake_users = [
+        {
+            "id": 1,
+            "name": "user1",
+            "email": "test@test.com",
+            "created_at": "2022-09-13 13:12:00",
+            "updated_at": "2022-09-13 13:12:00",
+        },
+        {
+            "id": 2,
+            "name": "user2",
+            "email": "test2@test.com",
+            "created_at": "2022-09-13 13:12:00",
+            "updated_at": "2022-09-13 13:12:00",
+        },
+    ]
+    for user in fake_users:
+        fake_user_repo.create(user)
+
+    fake_post_repo.create(
+        {
+            "id": 1,
+            "user": 1,
+            "board": 1,
+            "content": "created context",
+            "created_at": "2022-09-13 13:12:00",
+            "updated_at": "2022-09-13 13:12:00",
+        }
+    )
+
+
+def test_update_non_exist_post(set_up_fake_db):
+    with pytest.raises(Post.DoesNotExist):
+        sut = board_service.update_post(
+            post_id=2, user_id=1, update_content="updated content"
+        )
     
-@pytest.fixture(scope="session")
-def setUp(self) -> None:
-    a = self.user = User.objects.create(
-        name="UserName",
-        email="example@email.com",
-        password="88a0fec0ab09d7109929828a6e3f96d4947cf7cd82ea3dfd359043de9b2485e4",
-    )
-    b = self.stock = Stock.objects.create(name="StockName", group="Group", isin_number=1)
-    c = self.account = Account.objects.create(
-        user_id=1,
-        brokerage="brokerage",
-        number="1234123412",
-        name="계좌명1",
-        investment_principal=200000,
-    )
-    d = self.invest_info = InvestInfo.objects.create(
-        stock_id=1, account_id=1, amount=5, current_price="2000"
-    )
 
 
 """Repo 테스트"""

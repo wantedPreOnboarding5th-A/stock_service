@@ -1,4 +1,4 @@
-from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
+from invest.repository import AbstractInvestInfoRepo, AccountRepo, InvestInfoRepo, StockRepo
 from user.repository import UserRepo
 
 
@@ -8,7 +8,10 @@ stock_repo = StockRepo()
 user_repo = UserRepo()
 
 
-class InvestManagementSerivice:
+class InvestInfoManagementSerivice:
+    def __init__(self, repo:AbstractInvestInfoRepo) -> None:
+        self.repo = repo
+        
     def get_invest_info(self, account_number: int) -> dict:
         invest_info_list = invest_info_repo.find_by_account_number(account_number=account_number)
         user_info = user_repo.get_by_account_number(account_number=account_number)

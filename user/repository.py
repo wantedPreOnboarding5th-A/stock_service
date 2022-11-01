@@ -2,12 +2,13 @@ from user.models import User
 from user.serializers import UserSerializer
 from exceptions import NotFoundError
 
-
-class UserRepo:
+class AbstractUserRepo:
     def __init__(self) -> None:
         self.model = User
         self.serializer = UserSerializer
-
+        
+class UserRepo(AbstractUserRepo):
+    
     def get(self, user_id: int) -> dict:
         try:
             return UserSerializer(self.model.objects.get(id=user_id)).data

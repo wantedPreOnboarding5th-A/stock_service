@@ -5,38 +5,40 @@ from invest.serializers import (
     InvestAccountStockListSerializer,
     InvestInfoSerializer,
 )
+#TODO deprecated 확인할것.
 
-invest_acc_stock_serializer = InvestAccountStockListSerializer
 
-
-class InvestInfoRepo:
+class AbstractInvestInfoRepo:
     def __init__(self) -> None:
-        self.serilaizer = InvestInfoSerializer
+        self.serializer = InvestInfoSerializer
         self.model = InvestInfo
+        self.invest_acc_stock_serializer = InvestAccountStockListSerializer
 
+class InvestInfoRepo(AbstractInvestInfoRepo):
+        #deprecated?
     def get_by_account_id(self, account_id: int) -> dict:
         try:
-            return self.serilaizer(self.model.objects.get(account_id=account_id)).data
+            return self.serializer(self.model.objects.get(account_id=account_id)).data
         except self.model.DoesNotExist:
             raise NotFoundError
-
+        #deprecated?
     def find_by_account_id(self, account_id: int) -> list:
         try:
             info_list = InvestInfo.objects.filter(account_id=account_id).order_by("-stock_id")
-            return self.serilaizer(info_list)
+            return self.serializer(info_list)
         except self.model.DoesNotExist:
             raise NotFoundError
-
+        #deprecated?
     def get_by_stock_id(self, stock_id: int) -> dict:
         try:
-            return self.serilaizer(self.model.objects.get(stock_id=stock_id)).data
+            return self.serializer(self.model.objects.get(stock_id=stock_id)).data
         except self.model.DoesNotExist:
             raise NotFoundError
-
+        #deprecated?
     def find_by_stock_id(self, stock_id: int) -> list:
         try:
             info_list = InvestInfo.objects.filter(stock_id=stock_id).order_by("-stock_id")
-            return self.serilaizer(info_list)
+            return self.serializer(info_list)
         except self.model.DoesNotExist:
             raise NotFoundError
 
@@ -59,19 +61,21 @@ class InvestInfoRepo:
             if not invest_info_list.values():
                 raise NotFoundError
 
-            return invest_acc_stock_serializer(invest_info_list).data
+            return self.invest_acc_stock_serializer(invest_info_list).data
         except self.model.DoesNotExist:
             raise NotFoundError
 
-
-class AccountRepo:
+class AbstractAccountRepo:
     def __init__(self) -> None:
-        self.serilaizer = AccountSerializer
+        self.serializer = AccountSerializer
         self.model = Account
+        self.invest_acc_stock_serializer = InvestAccountStockListSerializer
 
+class AccountRepo(AbstractAccountRepo):
+    #deprecated
     def get(self, user_id: str) -> dict:
         try:
-            return self.serilaizer(self.model.objects.get(user_id=user_id)).data
+            return self.serializer(self.model.objects.get(user_id=user_id)).data
         except self.model.DoesNotExist:
             raise NotFoundError
 
@@ -86,18 +90,20 @@ class AccountRepo:
                 .filter(number=account_number)
                 .get(stock__isin_number__exact="CASH")
             )
-            return invest_acc_stock_serializer(cash_info).data
+            return self.invest_acc_stock_serializer(cash_info).data
         except self.model.DoesNotExist:
             raise NotFoundError
 
-
-class StockRepo:
+class AbstractStockRepo:
     def __init__(self) -> None:
-        self.serilaizer = AccountSerializer
+        self.serializer = AccountSerializer
         self.model = Account
 
+        
+class StockRepo(AbstractStockRepo):
+    #deprecated
     def get(self, stock_id: int) -> dict:
         try:
-            return self.serilaizer(self.model.objects.get(id=stock_id))
+            return self.serializer(self.model.objects.get(id=stock_id))
         except self.model.DoesNotExist:
             raise NotFoundError
