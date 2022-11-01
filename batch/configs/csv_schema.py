@@ -1,22 +1,12 @@
 from pydantic import BaseModel
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, ValidationError
 
 
-class CustomBaseModel(BaseModel):
-    @classmethod
-    def get_fields_name_list(cls) -> list[str]:
-        return list(cls.__fields__.keys())
-
-
-def _check_str_max_length(input_str: str, max_length: int):
-    return len(input_str) <= max_length
-
-
-def _str_max_length_validator(v, max_legnth: int):
-    if _check_str_max_length(v, max_legnth):
-        return v.title()
+def _validate_is_numeric_str(data: str):
+    if data.isnumeric():
+        return True
     else:
-        raise ValidationError("str max length limited")
+        raise ValidationError("Not a Number string")
 
 
 def _str_must_be_given_digit_validator(v, digit_cnt: int, exception_value: str = None):
@@ -26,41 +16,93 @@ def _str_must_be_given_digit_validator(v, digit_cnt: int, exception_value: str =
         raise ValidationError(f"str must be {digit_cnt} digit")
 
 
-class AccountBasicInfoSchema(CustomBaseModel):
-    account_number: str
-    investment_principal: str
+def _validate_number_str(v, digit_cnt: int = None, exception_value: str = None):
+    _validate_is_numeric_str(v)  # raise error if not valid
+    number = int(v)
+    if digit_cnt != None:
+        return _str_must_be_given_digit_validator(v, digit_cnt, exception_value)
+    else:
+        if number >= 0:
+            return v
+        else:
+            raise ValidationError("Number must be bigger than or same 0")
 
-    @validator("account_number")
-    def account_number_must_be_13_digit(cls, v):
-        return _str_must_be_given_digit_validator(v, 13)
+
+class NameFiled(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_name
+
+    @classmethod
+    def validate_name(cls, name: str) -> str:
+        if len(name) <= 20:
+            return name
+        else:
+            raise ValidationError("name maximum length is 20")
+
+
+class AccountNumber(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_acccount_number
+
+    @classmethod
+    def validate_acccount_number(cls, acccount_number: str) -> str:
+        if _validate_number_str(acccount_number, 13):  # 올바르지 않은 경우 raise error
+            return acccount_number
+
+
+class ISIN(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_isin_number
+
+    @classmethod
+    def validate_isin_number(cls, isin_number: str) -> str:
+        if len(isin_number) == 12 or isin_number == "CASH":
+            return isin_number
+        else:
+            raise ValidationError("Invalid ISIN")
+
+
+class PositiveIntString(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_positive_int
+
+    @classmethod
+    def validate_positive_int(cls, number: str) -> str:
+        _validate_is_numeric_str(number)  # raise error if not valid
+        int_number = int(number)
+
+        if int_number >= 0:
+            return number
+        else:
+            raise ValidationError("Number must be bigger than or same 0")
+
+
+class CustomBaseModel(BaseModel):
+    @classmethod
+    def get_fields_name_list(cls) -> list[str]:
+        return list(cls.__fields__.keys())
+
+
+class AccountBasicInfoSchema(CustomBaseModel):
+    account_number: AccountNumber
+    investment_principal: PositiveIntString
 
 
 class AccountAssetInfoSchema(CustomBaseModel):
-    user_name: str
-    brokerage: str
-    number: str
-    account_name: str
-    isin_number: str
-    current_price: str
-    amount: str
+    user_name: NameFiled
+    brokerage: NameFiled
+    number: AccountNumber
+    account_name: NameFiled
+    isin_number: ISIN
+    current_price: PositiveIntString
+    amount: PositiveIntString
 
 
-class AssetGroupIngoSchema(CustomBaseModel):
-    name: str
-    isin_number: str
+class AssetGroupInfoSchema(CustomBaseModel):
+    name: NameFiled
+    isin_number: ISIN
     group: str
-
-    @validator("name")
-    def name_str_max_length_validator(cls, v):
-        return _str_max_length_validator(v, 20)
-
-    @validator("group")
-    def group_str_max_length_validator(cls, v):
-        return _str_max_length_validator(v, 20)
-
-    @validator("isin_number")
-    def isin_number_must_be_12_digit(
-        cls,
-        v,
-    ):
-        return _str_must_be_given_digit_validator(v, 12, exception_value="CASH")
