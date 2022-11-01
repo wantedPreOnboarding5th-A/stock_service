@@ -9,7 +9,6 @@ invest_management_service = InvestManagementSerivice()
 stock_service = StockService()
 auth_provider = AuthProvider()
 
-
 stock_service = StockService()
 auth_provider = AuthProvider()
 
