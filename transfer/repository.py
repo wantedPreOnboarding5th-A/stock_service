@@ -1,10 +1,9 @@
-import bcrypt
+import hashlib
 from transfer.models import Transfer
 from transfer.serializers import TransferSerializer
 from invest.models import Account
 from transfer.enums import TransferStatus
-from exceptions import NotFoundError
-from .exceptions import NegativeAmountError, AlreadyPayedError
+from .exceptions import NegativeAmountError, AlreadyPayedError, NotFoundErrorAccount
 
 
 class TransferRepo:
@@ -38,7 +37,7 @@ class TransferRepo:
             return serialize.data
         
         except Account.DoesNotExist:
-            raise NotFoundError()
+            raise NotFoundErrorAccount()
             
 
     def is_postive_amount(self, transfer_amount: int)-> bool:
@@ -61,19 +60,16 @@ class PayRepo:
         """
         signatrue와 transfer 객체 저장된 정보 일치 확인 메서드
         """
-        
         hash = user+account_number+str(transfer_amount)
-    
-        test = bcrypt.hashpw(hash.encode("utf8"), bcrypt.gensalt()).decode("utf8") 
-        print(test)
-        
         hashed = self.check_hash(hash, signature)
+        
         return hashed 
-    
+        
 
     def check_hash(self, hash: str, signature: str) -> bool:
-        return bcrypt.checkpw(hash.encode('utf-8'), signature.encode('utf-8'))
-
+        hashed = hashlib.sha256(hash.encode("utf-8")).digest().hex() 
+        return True if hashed.upper() == signature.upper() else False
+        
     
     def is_already_success(self, trans_obj: object) -> bool:
         """

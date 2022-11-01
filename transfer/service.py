@@ -2,13 +2,14 @@ from transfer.repository import TransferRepo, PayRepo
 from transfer.models import Transfer
 from transfer.serializers import PayforTransSchema
 from transfer.enums import TransferStatus
-from exceptions import NotFoundError
+from transfer.exceptions import NotFoundErrorTransfer
 
 
 class TransferService:
     """
     phase1을 위한 서비스
     """
+    
     def __init__(self) -> None:
         self.transfer_refo = TransferRepo()
 
@@ -23,6 +24,10 @@ class TransferService:
 
 
 class PayService:
+    """
+    phase2을 위한 서비스
+    """
+    
     def __init__(self):
         self.pay_repo = PayRepo()
 
@@ -46,4 +51,4 @@ class PayService:
                 return False  
         
         except Transfer.DoesNotExist:
-            raise NotFoundError()
+            raise NotFoundErrorTransfer()

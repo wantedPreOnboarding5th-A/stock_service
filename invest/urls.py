@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import get_list
-from invest.views import get_invest_detail, get_invest_info
+from invest.views import get_invest_detail, get_invest_info, get_list
 
 
 urlpatterns = [
