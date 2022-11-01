@@ -1,4 +1,4 @@
-from xml.dom import NotFoundErr
+from invest.exceptions import NotFoundError
 from invest.models import Account, InvestInfo
 from invest.serializers import (
     AccountSerializer,
@@ -18,27 +18,27 @@ class InvestInfoRepo:
         try:
             return self.serilaizer(self.model.objects.get(account_id=account_id)).data
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
     def find_by_account_id(self, account_id: int) -> list:
         try:
             info_list = InvestInfo.objects.filter(account_id=account_id).order_by("-stock_id")
             return self.serilaizer(info_list)
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
     def get_by_stock_id(self, stock_id: int) -> dict:
         try:
             return self.serilaizer(self.model.objects.get(stock_id=stock_id)).data
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
     def find_by_stock_id(self, stock_id: int) -> list:
         try:
             info_list = InvestInfo.objects.filter(stock_id=stock_id).order_by("-stock_id")
             return self.serilaizer(info_list)
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
         """
         계좌번호로 역참조 후 필터링해서 가져오는 메서드
@@ -56,11 +56,11 @@ class InvestInfoRepo:
             )
             # 리스트가 비어있을시 오류 출력
             if not invest_info_list.values():
-                raise NotFoundErr
+                raise NotFoundError
 
             return invest_acc_stock_serializer(invest_info_list).data
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
 
 class AccountRepo:
@@ -72,7 +72,7 @@ class AccountRepo:
         try:
             return self.serilaizer(self.model.objects.get(user_id=user_id)).data
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
         """
         계좌 내에서 투자 원금이 아닌 현금만 찾아서 가져옵니다.
@@ -87,7 +87,7 @@ class AccountRepo:
             )
             return invest_acc_stock_serializer(cash_info).data
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
 
 
 class StockRepo:
@@ -99,4 +99,4 @@ class StockRepo:
         try:
             return self.serilaizer(self.model.objects.get(id=stock_id))
         except self.model.DoesNotExist:
-            raise NotFoundErr
+            raise NotFoundError
