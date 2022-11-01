@@ -1,4 +1,11 @@
 from invest.exceptions import NotFoundError
+from typing import List
+
+from .models import Stock
+from .serializers import StockSerializer
+
+from .utils.exceptions import NotFoundError
+
 from invest.models import Account, InvestInfo
 from invest.serializers import (
     AccountSerializer,
@@ -93,11 +100,18 @@ class AccountRepo:
 
 class StockRepo:
     def __init__(self) -> None:
-        self.serilaizer = AccountSerializer
-        self.model = Account
+        self.model = Stock
+        self.serializer = StockSerializer
 
-    def get(self, stock_id: int) -> dict:
+    def get_list_by_account_id(self, accout_id: List[int]) -> dict:
         try:
-            return self.serilaizer(self.model.objects.get(id=stock_id))
+            res = []
+
+            for account in accout_id:
+                created = self.serializer(
+                    self.model.objects.prefetch_related("investinfo_set").filter(accout_id=account)
+                ).data
+                res.append(created)
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError
