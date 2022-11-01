@@ -10,6 +10,7 @@ from invest.repository import InvestInfoRepo
 from invest.service import InvestInfoManagementSerivice
 from user.repository import UserRepo
 
+
 invest_management_service = InvestInfoManagementSerivice(
     invest_info_repo=InvestInfoRepo, user_repo=UserRepo
 )
