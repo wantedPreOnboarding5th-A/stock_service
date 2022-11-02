@@ -95,6 +95,7 @@ class InvestInfoManagementSerivice:
             "profit_percentage": profit_percentage,
         }
 
-        res = InvestInfoDetailResSchema()
+        res = InvestInfoDetailResSchema(data=data)
+        res.is_valid()
 
-        return data
+        return res.data

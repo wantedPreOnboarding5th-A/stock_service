@@ -25,7 +25,7 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
         super().__init__()
 
         """
-        계좌번호로 역참조 후 필터링해서 가져오는 메서드
+        계좌번호로 참조 후 필터링해서 가져오는 메서드
         현금도 포함합니다.
         """
 

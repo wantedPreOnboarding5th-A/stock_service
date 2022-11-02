@@ -54,8 +54,6 @@ class InvestInfoDetailResSchema(serializers.Serializer):
     profit_percentage = serializers.IntegerField()
 
 
-class InvestInfoDetailResSchema:
-    """투자 상세정보 조회 서비스 응답 필드"""
 
 
 class InvestInfoStockSerializer(serializers.ModelSerializer):
