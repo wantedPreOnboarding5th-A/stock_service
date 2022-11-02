@@ -50,6 +50,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("invest.urls")),
+    path("", include("user.urls")),
+    path("", include("transfer.urls")),
     re_path(
         r"^swagger/$",
         schema_view.with_ui("swagger", cache_timeout=0),

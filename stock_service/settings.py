@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "transfer.apps.TransferConfig",
     "invest.apps.InvestConfig",
     "drf_yasg",
+    "django_apscheduler",
+    "scheduler.apps.SchedulerAppConfig",
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,10 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# JWT SECRET
+JWT_KEY = config.token["scret"]
+JWT_EXPIRE_TIME = config.token["expire_sec"]
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
+BATCH_SCRIPT_CRON_COMMAND = config.batch_scheduler_cron_command

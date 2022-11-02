@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from stock_service.models import BaseModel
 from user.models import User as CustomUser
@@ -44,6 +45,9 @@ class InvestInfo(BaseModel):
     )
     amount = models.IntegerField(null=False)  # 보유 수량
     current_price = models.IntegerField(null=False)  # 현재가
+    account_isin_number = models.CharField(
+        max_length=26, null=False, unique=True, default=""
+    )  # "{account_number}_{isin_number}" 값 저장
 
     class Meta:
         db_table = "invest_info"
