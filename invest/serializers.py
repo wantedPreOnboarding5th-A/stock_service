@@ -54,8 +54,6 @@ class InvestInfoDetailResSchema(serializers.Serializer):
     profit_percentage = serializers.IntegerField()
 
 
-
-
 class InvestInfoStockSerializer(serializers.ModelSerializer):
 
     stock = StockSerializer(read_only=True)
@@ -63,3 +61,12 @@ class InvestInfoStockSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvestInfo
         fields = "__all__"
+
+
+class StockHeldListResSchema(serializers.Serializer):
+    """보유 종목 조회 응답 필드"""
+
+    name = serializers.CharField()
+    group = serializers.CharField()
+    evaluation_amount = serializers.IntegerField()
+    isin_number = serializers.CharField()
