@@ -56,3 +56,12 @@ class InvestInfoDetailResSchema(serializers.Serializer):
 
 class InvestInfoDetailResSchema:
     """투자 상세정보 조회 서비스 응답 필드"""
+
+
+class InvestInfoStockSerializer(serializers.ModelSerializer):
+
+    stock = StockSerializer(read_only=True)
+
+    class Meta:
+        model = InvestInfo
+        fields = "__all__"
