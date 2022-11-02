@@ -13,6 +13,7 @@ class Config:
     databases: dict = yaml_settings["databases"]
     secrets: dict = yaml_settings["secrets"]
     token: dict = yaml_settings["token"]
+    batch_scheduler = yaml_settings["batch_scheduler"]
 
 
 config = Config()
