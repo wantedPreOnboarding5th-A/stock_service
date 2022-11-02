@@ -106,7 +106,7 @@ class StockAPITest(TestCase):
         Stock.objects.all().delete()
         InvestInfo.objects.all().delete()
 
-    def get_list_stock_held_complete(self):
+    def test_get_list_stock_held_complete(self):
         self.auth_provider = AuthProvider()
         self.access_token = self.auth_provider.create_token(user_id=self.user1.id)
         headers = {"HTTP_AUTHORIZATION": self.access_token["access"]}

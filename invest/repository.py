@@ -24,7 +24,7 @@ class AbstractInvestInfoRepo:
     def __init__(self) -> None:
         self.serializer = InvestInfoSerializer
         self.model = InvestInfo
-        self.invest_acc_stock_serializer = InvestAccountStockListSerializer(many=True)
+        self.invest_acc_stock_serializer = InvestAccountStockListSerializer
 
 
 class InvestInfoRepo(AbstractInvestInfoRepo):
