@@ -1,4 +1,4 @@
-from batch.configs.csv_schema import (
+from batch.csv_schema import (
     AccountBasicInfoSchema,
     AccountAssetInfoSchema,
     AssetGroupInfoSchema,

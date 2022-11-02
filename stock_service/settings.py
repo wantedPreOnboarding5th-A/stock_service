@@ -137,4 +137,4 @@ JWT_KEY = config.token["scret"]
 JWT_EXPIRE_TIME = config.token["expire_sec"]
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
-BATCH_SCRIPT_EXECUTE_TIME = config.batch_scheduler["execute_time"]
+BATCH_SCRIPT_CRON_COMMAND = config.batch_scheduler_cron_command

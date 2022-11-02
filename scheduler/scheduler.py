@@ -2,6 +2,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from batch.get_csv_script import get_csv_and_save
 from django.conf import settings
 
+cron_command = settings.BATCH_SCRIPT_CRON_COMMAND
+
 
 def start():
     scheduler = BackgroundScheduler(
@@ -23,5 +25,11 @@ def start():
             "apscheduler.timezone": "Asia/Seoul",
         }
     )
-    scheduler.add_job(get_csv_and_save, "cron", second=10)
+    scheduler.add_job(
+        get_csv_and_save,
+        "cron",
+        id="csv_save_batch",
+        replace_existing=True,
+        **cron_command
+    )
     scheduler.start()

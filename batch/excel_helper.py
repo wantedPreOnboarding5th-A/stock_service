@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from batch.configs.csv_schema import CustomBaseModel
+from batch.csv_schema import CustomBaseModel
 from batch.configs.config import EXCEL_DATA_SCHEMA_MAP_LIST
 from pydantic import ValidationError
 import os
