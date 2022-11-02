@@ -5,8 +5,14 @@ from invest.service import InvestManagementSerivice, StockService
 from drf_yasg.utils import swagger_auto_schema
 from .service import StockService
 from provider.auth_provider import AuthProvider
+from invest.repository import InvestInfoRepo
 
-invest_management_service = InvestManagementSerivice()
+from invest.service import InvestInfoManagementSerivice
+from user.repository import UserRepo
+
+invest_management_service = InvestInfoManagementSerivice(
+    invest_info_repo=InvestInfoRepo, user_repo=UserRepo
+)
 
 
 stock_service = StockService()
@@ -15,13 +21,17 @@ auth_provider = AuthProvider()
 
 @api_view(["GET"])
 @parser_classes([JSONParser])
-def get_invest_info(request, account_number: int):
+def get_invest_info(request, account_number: str):
     return JsonResponse(invest_management_service.get_invest_info(account_number=account_number))
 
 
 @api_view(["GET"])
 @parser_classes([JSONParser])
 def get_invest_detail(request, account_number: int):
+    return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
+
+
+def get_invest_detail(request, account_number: str):
     return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
 
 

@@ -21,8 +21,8 @@ class InvestInfoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InvestAccountStockListSerializer(serializers.ModelSerializer):
-    """조인 전용 Serializer"""
+class InvestAccountStockListSerializer(serializers.ListSerializer):
+    """Join 전용 Serializer"""
 
     stocks = StockSerializer(many=True, read_only=True)
     accounts = AccountSerializer(many=True, read_only=True)
@@ -30,3 +30,30 @@ class InvestAccountStockListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvestInfo
         fields = ["stocks", "accounts", "current_price", "amount"]
+
+
+class InvestInfoResSchema(serializers.Serializer):
+    """투자정보 조회 서비스 응답 필드"""
+
+    account_name = serializers.CharField()
+    brokerage = serializers.CharField()
+    number = serializers.CharField()
+    user_name = serializers.CharField()
+    all_assets = serializers.IntegerField()
+
+
+class InvestInfoDetailResSchema(serializers.Serializer):
+    """투자정보 상세 조회 서비스 응답 필드"""
+
+    account_name = serializers.CharField()
+    brokerage = serializers.CharField()
+    number = serializers.CharField()
+    user_name = serializers.CharField()
+    all_assets = serializers.IntegerField()
+    investment_principal = serializers.IntegerField()
+    total_profit = serializers.IntegerField()
+    profit_percentage = serializers.IntegerField()
+
+
+class InvestInfoDetailResSchema:
+    """투자 상세정보 조회 서비스 응답 필드"""
