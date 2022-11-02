@@ -1,6 +1,7 @@
 from invest.repository import AbstractInvestInfoRepo, StockRepo
 from invest.serializers import InvestInfoDetailResSchema, InvestInfoResSchema
-
+from invest.repository import  InvestInfoRepo, AbstractInvestInfoRepo
+from user.repository import AbstractUserRepo
 from .models import Account
 
 
@@ -45,7 +46,7 @@ class InvestInfoManagementSerivice:
         invest_info_list = self.invest_info_repo.find_by_account_number(
             account_number=account_number
         )
-        user_info = self.user_repo.get_by_account_number(account_number=account_number).data
+        user_info = self.user_repo.get_by_account_number(account_number=account_number)
 
         all_assets = 0
         for i in invest_info_list:
@@ -54,7 +55,7 @@ class InvestInfoManagementSerivice:
         brokerage = invest_info_list[0]["account"]["brokerage"]
         account_number = invest_info_list[0]["account"]["number"]
         user_name = user_info["name"]
-        temp = user_info
+
         data = {
             "user_name": user_name,
             "brokerage": brokerage,
@@ -73,7 +74,7 @@ class InvestInfoManagementSerivice:
         invest_info_list = self.invest_info_repo.find_by_account_number(
             account_number=account_number
         )
-        user_info = self.user_repo.get_by_account_number(account_number=account_number).data
+        user_info = self.user_repo.get_by_account_number(account_number=account_number)
 
         all_assets = 0
         for i in invest_info_list:
@@ -97,7 +98,7 @@ class InvestInfoManagementSerivice:
             "total_profit": total_profit,
             "profit_percentage": profit_percentage,
         }
-
+        
         res = InvestInfoDetailResSchema()
 
         return data
