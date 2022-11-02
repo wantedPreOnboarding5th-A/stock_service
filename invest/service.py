@@ -1,6 +1,6 @@
 from invest.serializers import InvestInfoDetailResSchema, InvestInfoResSchema
-from invest.repository import AccountRepo, InvestInfoRepo, AbstractInvestInfoRepo
-from user.repository import UserRepo, AbstractUserRepo
+from invest.repository import  InvestInfoRepo, AbstractInvestInfoRepo
+from user.repository import AbstractUserRepo
 from .models import Account
 
 
