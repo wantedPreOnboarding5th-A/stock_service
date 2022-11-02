@@ -7,14 +7,8 @@ from provider.auth_provider import AuthProvider
 from invest.repository import InvestInfoRepo
 
 from invest.service import InvestInfoManagementSerivice
+
 from user.repository import UserRepo
-
-stock_service = StockService()
-auth_provider = AuthProvider()
-
-invest_management_service = InvestInfoManagementSerivice(
-    invest_info_repo=InvestInfoRepo, user_repo=UserRepo
-)
 
 stock_service = StockService()
 auth_provider = AuthProvider()
@@ -23,12 +17,24 @@ auth_provider = AuthProvider()
 @api_view(["GET"])
 @parser_classes([JSONParser])
 def get_invest_info(request, account_number: str):
+    # 인스턴스 생성
+    invest_info_repo = InvestInfoRepo()
+    user_repo = UserRepo()
+    invest_management_service = InvestInfoManagementSerivice(
+        invest_info_repo=invest_info_repo, user_repo=user_repo
+    )
     return JsonResponse(invest_management_service.get_invest_info(account_number=account_number))
 
 
 @api_view(["GET"])
 @parser_classes([JSONParser])
 def get_invest_detail(request, account_number: int):
+    # 인스턴스 생성
+    invest_info_repo = InvestInfoRepo()
+    user_repo = UserRepo()
+    invest_management_service = InvestInfoManagementSerivice(
+        invest_info_repo=invest_info_repo, user_repo=user_repo
+    )
     return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
 
 

@@ -31,6 +31,7 @@ def _upsert_data(
         model.objects.bulk_create(create_data)
 
 
+
 def _get_db_data_hashtable(query: QuerySet, key_name: str, serilizer):
     data_list = serilizer(query, many=True).data
     return make_hashtable(key_name, data_list)
