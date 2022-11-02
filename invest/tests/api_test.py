@@ -60,4 +60,4 @@ class StockAPITest(TestCase):
                 "group": "국내",
                 "evaluation_amount": 20000000,
                 "isin_number": "KR7360750004",
-            },
+            },)

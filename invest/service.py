@@ -1,5 +1,5 @@
 from invest.serializers import InvestInfoDetailResSchema, InvestInfoResSchema
-from invest.repository import  InvestInfoRepo, AbstractInvestInfoRepo
+from invest.repository import InvestInfoRepo, AbstractInvestInfoRepo
 from user.repository import AbstractUserRepo
 from .models import Account
 
@@ -84,19 +84,17 @@ class InvestInfoManagementSerivice:
         total_profit = all_assets - investment_principal
         profit_percentage = (total_profit / investment_principal) * 100
 
-        # 유저쪽 이름 가져오기 #TODO 하드코딩 되어있음
-        user_name = "str"
-
         data = {
             "account_name": account_name,
             "brokerage": brokerage,
             "number": account_number,
+            "user_name": user_name,
             "all_assets": all_assets,
             "investment_principal": investment_principal,
             "total_profit": total_profit,
             "profit_percentage": profit_percentage,
         }
-        
+
         res = InvestInfoDetailResSchema()
 
         return data

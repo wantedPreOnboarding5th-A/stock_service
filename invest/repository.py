@@ -1,12 +1,10 @@
 from invest.exceptions import NotFoundError
 from typing import List
 
-from .models import Stock
-from .serializers import StockSerializer
+
 from .utils.exceptions import NotFoundError
-from invest.models import Account, InvestInfo, Stock
+from invest.models import InvestInfo
 from invest.serializers import (
-    AccountSerializer,
     InvestAccountStockListSerializer,
     InvestInfoSerializer,
 )
