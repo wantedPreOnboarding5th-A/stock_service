@@ -45,15 +45,11 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
         except self.model.DoesNotExist:
             raise NotFoundError
 
-    def get_list_by_account_id1(self, account_id: List[int]) -> dict:
+    def get_list_by_account_id(self, account_id: List[int]) -> dict:
         try:
-            res = []
-            for account in account_id:
-                createds = self.model.objects.select_related("stock").filter(account_id=account)
-            for created in createds:
-                data = self.serializer(created).data
-                res.append(data)
-            return res
+            createds = self.model.objects.select_related("stock").filter(account_id__in=account_id)
+            data = investinfo_stock_serializer(createds, many=True).data
+            return data
         except self.model.DoesNotExist:
             raise NotFoundError
 
