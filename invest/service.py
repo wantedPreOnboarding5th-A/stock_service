@@ -15,7 +15,7 @@ class StockService:
         for account_id in account_ids:
             params.append(account_id.id)
 
-        repos = self.repository.get_list_by_account_id(account_id=params)
+        repos = self.repository.get_list_by_account_id2(account_id=params)
 
         res = [
             {

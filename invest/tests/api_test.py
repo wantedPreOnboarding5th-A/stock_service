@@ -5,6 +5,10 @@ from invest.models import Account, InvestInfo, Stock
 from user.models import User
 from provider.auth_provider import AuthProvider
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 091c1de ([feat] 보유 종목 로직 리팩토링)
 class StockAPITest(TestCase):
     def setUp(self) -> None:
         self.user1 = User.objects.create(
