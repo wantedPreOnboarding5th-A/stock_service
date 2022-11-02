@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
-from invest.service import InvestManagementSerivice, StockService
+from invest.service import StockService
 from drf_yasg.utils import swagger_auto_schema
 from .service import StockService
 from provider.auth_provider import AuthProvider
@@ -29,11 +29,6 @@ def get_invest_info(request, account_number: str):
 @parser_classes([JSONParser])
 def get_invest_detail(request, account_number: int):
     return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
-
-
-def get_invest_detail(request, account_number: str):
-    return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
-
 
 # 보유 종목 요청 API
 @api_view(["GET"])

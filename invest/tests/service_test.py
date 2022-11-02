@@ -46,6 +46,7 @@ class TestAllService(TestCase):
             invest_info_repo=MockInvestInfoRepo, user_repo=MockUserRepo
         ).get_invest_info(account_number="1234123412")
 
+        e = response
         # then
         self.assertEqual(response, expected_data)
 
