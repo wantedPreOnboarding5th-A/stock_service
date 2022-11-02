@@ -2,3 +2,4 @@ __pycache__
 *_real.yml
 .vscode
 .DS_Store
+*.sqlite
