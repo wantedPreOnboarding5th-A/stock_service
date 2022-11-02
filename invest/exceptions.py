@@ -7,3 +7,7 @@ class CustomBaseExecption(Exception):
 class NotFoundError(CustomBaseExecption):
     def __init__(self):
         self.msg = "Data Not Found. Please Check ID"
+        
+class UserNotFoundError(CustomBaseExecption):
+    def __init__(self):
+        self.msg = "User Not Found. Please Check ID"
