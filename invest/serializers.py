@@ -29,3 +29,12 @@ class InvestAccountStockListSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvestInfo
         fields = ["stocks", "accounts", "current_price", "amount"]
+
+
+class InvestInfoStockSerializer(serializers.ModelSerializer):
+
+    stock = StockSerializer(read_only=True)
+
+    class Meta:
+        model = InvestInfo
+        fields = "__all__"

@@ -1,20 +1,22 @@
 from django.conf import settings
 import pytest
 from invest.models import Account, InvestInfo, Stock
-from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
+from invest.repository import AccountRepo, InvestInfoRepo
 from user.models import User
 from user.repository import UserRepo
+from django.test import TestCase
 
 # Create your tests here.
 invest_info_repo = InvestInfoRepo()
 account_repo = AccountRepo()
-stock_repo = StockRepo()
 user_repo = UserRepo()
+
 
 @pytest.fixture(scope="session")
 def django_db_setup():
     settings.DATABASES
-    
+
+
 @pytest.fixture(scope="session")
 def setUp(self) -> None:
     a = self.user = User.objects.create(
@@ -73,3 +75,66 @@ def test_find_invest_info_by_account_number():
 
 
 valid_data_stock = {"name": "미국S&P500", "isin_number": "KR7360750004", "group": "미국 주식"}
+
+
+class StockRepoTest(TestCase):
+    def setUp(self) -> None:
+        self.user1 = User.objects.create(
+            name="김가나",
+            email="test1@test.com",
+            password="test",
+        )
+        self.accunt1 = Account.objects.create(
+            user=self.user1,
+            number=1111111111111,
+            brokerage="테스트증권1",
+            name="테스트계좌1",
+            investment_principal=10000,
+        )
+        self.accunt2 = (
+            Account.objects.create(
+                user=self.user1,
+                number=1111111111111,
+                brokerage="테스트증권2",
+                name="테스트계좌2",
+                investment_principal=10000,
+            ),
+        )
+        self.stock1 = Stock.objects.create(
+            name="코스피 50",
+            isin_number="KR7360750004",
+            group="국내",
+        )
+        InvestInfo.objects.create(
+            stock=self.stock1,
+            accout=self.accunt1,
+            amount=100,
+            current_price=200000,
+            account_isin_number="KR7360750004",
+        )
+
+    def tearDown(self) -> None:
+        User.objects.all().delete()
+        Account.objects.all().delete()
+        Stock.objects.all().delete()
+        InvestInfo.objects.all().delete()
+
+    def test_get_list_by_account_id_success(self):
+        self.account_id = [1, 2]
+        response = invest_info_repo.get_list_by_account_id(account_id=self.account_id)
+
+        self.assertEqual(
+            response,
+            {
+                "stock": {
+                    "name": "코스피 50",
+                    "isin_number": "KR7360750004",
+                    "group": "국내",
+                },
+                "stock_id": 1,
+                "account_id": 1,
+                "amount": 100,
+                "current_price": 200000,
+                "account_isin_number": "KR7360750004",
+            },
+        )

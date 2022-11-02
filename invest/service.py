@@ -1,11 +1,11 @@
-from invest.repository import AccountRepo, InvestInfoRepo, StockRepo
+from invest.repository import AccountRepo, InvestInfoRepo
 from user.repository import UserRepo
 from .models import Account
 
 
 class StockService:
     def __init__(self) -> None:
-        self.stock_repo = StockRepo()
+        self.repository = InvestInfoRepo()
 
     def get_stock_held_list(self, user_id: int) -> dict:
         account_ids = Account.objects.filter(user_id=user_id)
@@ -14,14 +14,14 @@ class StockService:
         for account_id in account_ids:
             params.append(account_id.id)
 
-        repos = self.stock_repo.get_list_by_account_id(accout_id=params)
+        repos = self.repository.get_list_by_account_id(account_id=params)
 
         res = [
             {
-                "name": repo["name"],
-                "group": repo["group"],
+                "name": repo["stock"]["name"],
+                "group": repo["stock"]["group"],
                 "evaluation_amount": repo["amount"] * repo["current_price"],
-                "isin_number": repo["isin_number"],
+                "isin_number": repo["stock"]["isin_number"],
             }
             for repo in repos
         ]
@@ -31,7 +31,6 @@ class StockService:
 
 invest_info_repo = InvestInfoRepo()
 account_repo = AccountRepo()
-stock_repo = StockRepo()
 user_repo = UserRepo()
 
 
@@ -94,7 +93,6 @@ class InvestManagementSerivice:
 
 invest_info_repo = InvestInfoRepo()
 account_repo = AccountRepo()
-stock_repo = StockRepo()
 
 
 class investManagementSerivice:
