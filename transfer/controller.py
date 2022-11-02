@@ -3,16 +3,22 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from rest_framework import status
-from transfer.serializers import TransferSchema, TransferIDSchema
+from transfer.serializers import TransferSchema, TransferIDSchema, TransferSwagger, PaySwagger
 from transfer.service import TransferService, PayService
 from decorators.execption_handler import execption_hanlder
 from decorators.auth_handler import must_be_user
 from transfer.exceptions import DoesNotSameName
+from drf_yasg.utils import swagger_auto_schema
+
 
 transfer_service = TransferService()
 pay_service = PayService()
 
 class TransferAPI(APIView):
+    @swagger_auto_schema(
+        request_body=TransferSchema,
+        responses={201: TransferSwagger()}
+    )
     def post(self, request):
         return transfer(request)
 
@@ -39,6 +45,10 @@ def transfer(request):
 
   
 class PayAPI(APIView):
+    @swagger_auto_schema(
+        request_body=TransferIDSchema,
+        responses={201: PaySwagger()}
+    )
     def post(self, request):
         return pay(request)
 

@@ -36,3 +36,19 @@ class PayforTransSchema(serializers.Serializer):
     account_number = serializers.CharField(max_length = 13)
     user = serializers.CharField(max_length = 20, source = "user.name")
     transfer_amount = serializers.IntegerField()
+
+
+class TransferSwagger(serializers.Serializer):
+    """
+    transfer swagger를 위한 serializer
+    """
+    
+    transfer_identifier = serializers.IntegerField()
+
+
+class PaySwagger(serializers.Serializer):
+    """
+    pay swagger를 위한 serializer
+    """
+
+    status = serializers.BooleanField()
