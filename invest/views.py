@@ -31,8 +31,8 @@ def get_invest_info(request, account_number: str):
 @parser_classes([JSONParser])
 def get_invest_detail(request, account_number: int):
     # 인스턴스 생성
-    invest_info_repo = InvestInfoRepo(AbstractInvestInfoRepo)
-    user_repo = UserRepo(AbstractUserRepo)
+    invest_info_repo = InvestInfoRepo()
+    user_repo = UserRepo()
     invest_management_service = InvestInfoManagementSerivice(
         invest_info_repo=invest_info_repo, user_repo=user_repo
     )

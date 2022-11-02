@@ -26,7 +26,7 @@ class UserRepo(AbstractUserRepo):
         """계좌번호로 유저 정보를 찾는 메서드"""
         try:
             return UserSerializer(
-                self.model.objects.select_related("account")
+                self.model.objects.prefetch_related("account_set")
                 .filter(account__number__exact=account_number)
                 .first()
             )

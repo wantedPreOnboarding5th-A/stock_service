@@ -31,23 +31,16 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
     def find_by_account_number(self, account_number: str) -> list:
         # 테이블 3개 조인
         try:
-            e = (
-                InvestInfo.objects.select_related("account")
-                .select_related("stock")
-                .filter(account__number__exact=account_number)
-            )
-            e = self.invest_acc_stock_serializer(e,many=True).data
 
             invest_info_list = (
                 InvestInfo.objects.select_related("account")
                 .select_related("stock")
                 .filter(account__number__exact=account_number)
             )
-            a = invest_info_list.values()
             # 비어있을시 오류 출력
             if not invest_info_list.values():
                 raise NotFoundError
-            return self.invest_acc_stock_serializer(invest_info_list,many=True).data
+            return self.invest_acc_stock_serializer(invest_info_list, many=True).data
         except self.model.DoesNotExist:
             raise NotFoundError
 

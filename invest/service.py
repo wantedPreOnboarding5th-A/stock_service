@@ -40,14 +40,12 @@ class InvestInfoManagementSerivice:
         self.invest_info_repo = invest_info_repo
         self.user_repo = user_repo
 
-    
-
     def get_invest_info(self, account_number: str) -> dict:
-        
-        
-        invest_info_list = self.invest_info_repo.find_by_account_number(account_number=account_number
-)
-        user_info = self.user_repo.get_by_account_number(account_number=account_number)
+
+        invest_info_list = self.invest_info_repo.find_by_account_number(
+            account_number=account_number
+        )
+        user_info = self.user_repo.get_by_account_number(account_number=account_number).data
 
         all_assets = 0
         for i in invest_info_list:
@@ -56,6 +54,7 @@ class InvestInfoManagementSerivice:
         brokerage = invest_info_list[0]["account"]["brokerage"]
         account_number = invest_info_list[0]["account"]["number"]
         user_name = user_info["name"]
+        temp = user_info
         data = {
             "user_name": user_name,
             "brokerage": brokerage,
@@ -74,7 +73,7 @@ class InvestInfoManagementSerivice:
         invest_info_list = self.invest_info_repo.find_by_account_number(
             account_number=account_number
         )
-        user_info = self.user_repo.get_by_account_number(account_number=account_number)
+        user_info = self.user_repo.get_by_account_number(account_number=account_number).data
 
         all_assets = 0
         for i in invest_info_list:
