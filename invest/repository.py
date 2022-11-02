@@ -4,7 +4,6 @@ from invest.serializers import (
     AccountSerializer,
     InvestAccountStockListSerializer,
     InvestInfoSerializer,
-    StockSerializer,
 )
 from typing import List
 
@@ -17,7 +16,7 @@ class AbstractInvestInfoRepo:
     def __init__(self) -> None:
         self.serializer = InvestInfoSerializer
         self.model = InvestInfo
-        self.invest_acc_stock_serializer = InvestAccountStockListSerializer(many=True)
+        self.invest_acc_stock_serializer = InvestAccountStockListSerializer
 
 
 class InvestInfoRepo(AbstractInvestInfoRepo):
@@ -29,20 +28,26 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
         현금도 포함합니다.
         """
 
-    def find_by_account_number(self,account_number: str) -> list:
+    def find_by_account_number(self, account_number: str) -> list:
         # 테이블 3개 조인
         try:
-            invest_info_list = (
-                InvestInfo.objects.prefetch_related("Account")
-                .prefetch_related("Stock")
+            e = (
+                InvestInfo.objects.select_related("account")
+                .select_related("stock")
                 .filter(account__number__exact=account_number)
             )
+            e = self.invest_acc_stock_serializer(e,many=True).data
 
+            invest_info_list = (
+                InvestInfo.objects.select_related("account")
+                .select_related("stock")
+                .filter(account__number__exact=account_number)
+            )
+            a = invest_info_list.values()
             # 비어있을시 오류 출력
             if not invest_info_list.values():
                 raise NotFoundError
-            e = self.model
-            return self.invest_acc_stock_serializer(invest_info_list).data
+            return self.invest_acc_stock_serializer(invest_info_list,many=True).data
         except self.model.DoesNotExist:
             raise NotFoundError
 

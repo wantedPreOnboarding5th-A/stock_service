@@ -210,9 +210,7 @@ def get_invest_info_orm_from_csv_data(
         InvestInfo.objects.filter(account_isin_number__in=account_isin_number_list),
         many=True,
     ).data
-    update_account_isin_number_list = list(
-        map(lambda x: x["account_isin_number"], update_target)
-    )
+    update_account_isin_number_list = list(map(lambda x: x["account_isin_number"], update_target))
     update_hashtable, create_hashtable = sperate_hsashtable_by_keys(
         data_hashtable, update_account_isin_number_list
     )
@@ -231,9 +229,7 @@ def get_invest_info_orm_from_csv_data(
 
     for invest_info in create_hashtable.values():
         create_orm_list.append(
-            parse_create_invest_info_data_to_orm(
-                invest_info, stock_hashtable, account_hashtable
-            )
+            parse_create_invest_info_data_to_orm(invest_info, stock_hashtable, account_hashtable)
         )
 
     return create_orm_list, update_orm_list
@@ -271,15 +267,11 @@ def _upsert_data(
         model.objects.bulk_create(create_data)
 
 
-def sync_with_db(
-    account_asset: list[dict], account_basic: list[dict], asset_group: list[dict]
-):
+def sync_with_db(account_asset: list[dict], account_basic: list[dict], asset_group: list[dict]):
     user_hashtable = _get_user_hashtable(account_asset)
 
     create_stock_list, update_stock_list = get_stock_orm_from_csv_data(asset_group)
-    _upsert_data(
-        Stock, update_stock_list, create_stock_list, ["name", "isin_number", "group"]
-    )
+    _upsert_data(Stock, update_stock_list, create_stock_list, ["name", "isin_number", "group"])
 
     create_account_list, update_account_list = get_account_orm_from_csv_data(
         account_basic, account_asset, user_hashtable

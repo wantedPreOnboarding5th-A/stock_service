@@ -5,14 +5,10 @@ from invest.service import StockService
 from drf_yasg.utils import swagger_auto_schema
 from .service import StockService
 from provider.auth_provider import AuthProvider
-from invest.repository import InvestInfoRepo
+from invest.repository import AbstractInvestInfoRepo, InvestInfoRepo
 
 from invest.service import InvestInfoManagementSerivice
-from user.repository import UserRepo
-
-invest_management_service = InvestInfoManagementSerivice(
-    invest_info_repo=InvestInfoRepo, user_repo=UserRepo
-)
+from user.repository import AbstractUserRepo, UserRepo
 
 
 stock_service = StockService()
@@ -22,13 +18,26 @@ auth_provider = AuthProvider()
 @api_view(["GET"])
 @parser_classes([JSONParser])
 def get_invest_info(request, account_number: str):
+    # 인스턴스 생성
+    invest_info_repo = InvestInfoRepo()
+    user_repo = UserRepo()
+    invest_management_service = InvestInfoManagementSerivice(
+        invest_info_repo=invest_info_repo, user_repo=user_repo
+    )
     return JsonResponse(invest_management_service.get_invest_info(account_number=account_number))
 
 
 @api_view(["GET"])
 @parser_classes([JSONParser])
 def get_invest_detail(request, account_number: int):
+    # 인스턴스 생성
+    invest_info_repo = InvestInfoRepo(AbstractInvestInfoRepo)
+    user_repo = UserRepo(AbstractUserRepo)
+    invest_management_service = InvestInfoManagementSerivice(
+        invest_info_repo=invest_info_repo, user_repo=user_repo
+    )
     return JsonResponse(invest_management_service.get_invest_detail(account_number=account_number))
+
 
 # 보유 종목 요청 API
 @api_view(["GET"])

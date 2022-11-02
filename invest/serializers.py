@@ -21,15 +21,15 @@ class InvestInfoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class InvestAccountStockListSerializer(serializers.ListSerializer):
+class InvestAccountStockListSerializer(serializers.ModelSerializer):
     """Join 전용 Serializer"""
 
-    stocks = StockSerializer(many=True, read_only=True)
-    accounts = AccountSerializer(many=True, read_only=True)
+    stock = StockSerializer(read_only=True)
+    account = AccountSerializer(read_only=True)
 
     class Meta:
         model = InvestInfo
-        fields = ["stocks", "accounts", "current_price", "amount"]
+        fields = ["current_price", "amount", "stock", "account"]
 
 
 class InvestInfoResSchema(serializers.Serializer):

@@ -40,17 +40,15 @@ class InvestInfoManagementSerivice:
         self.invest_info_repo = invest_info_repo
         self.user_repo = user_repo
 
-    # Question : 왜 멀쩡한 repo 생성자를 놔두고 이쪽에있는 self 를 인자로 받으려고 하는걸까?
+    
 
     def get_invest_info(self, account_number: str) -> dict:
+        
+        
+        invest_info_list = self.invest_info_repo.find_by_account_number(account_number=account_number
+)
+        user_info = self.user_repo.get_by_account_number(account_number=account_number)
 
-        # point
-        invest_info_list = self.invest_info_repo.find_by_account_number(
-            account_number=account_number
-        )
-        user_info = self.user_repo.get_by_account_number(self, account_number=account_number)
-
-        # filter, .select_related, 자동 캐싱된다.
         all_assets = 0
         for i in invest_info_list:
             all_assets = all_assets + i["amount"] * i["current_price"]
@@ -78,7 +76,6 @@ class InvestInfoManagementSerivice:
         )
         user_info = self.user_repo.get_by_account_number(account_number=account_number)
 
-        # filter, .select_related, 자동 캐싱된다.
         all_assets = 0
         for i in invest_info_list:
             all_assets = all_assets + i["amount"] * i["current_price"]
