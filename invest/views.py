@@ -3,13 +3,14 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
 from invest.service import StockService
 from drf_yasg.utils import swagger_auto_schema
-from .service import StockService
 from provider.auth_provider import AuthProvider
 from invest.repository import InvestInfoRepo
 
 from invest.service import InvestInfoManagementSerivice
 from user.repository import UserRepo
 
+stock_service = StockService()
+auth_provider = AuthProvider()
 
 invest_management_service = InvestInfoManagementSerivice(
     invest_info_repo=InvestInfoRepo, user_repo=UserRepo

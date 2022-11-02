@@ -1,4 +1,9 @@
 from invest.exceptions import NotFoundError
+from typing import List
+
+from .models import Stock
+from .serializers import StockSerializer
+from .utils.exceptions import NotFoundError
 from invest.models import Account, InvestInfo, Stock
 from invest.serializers import (
     AccountSerializer,
@@ -45,6 +50,18 @@ class InvestInfoRepo(AbstractInvestInfoRepo):
                 raise NotFoundError
             e = self.model
             return self.invest_acc_stock_serializer(invest_info_list).data
+        except self.model.DoesNotExist:
+            raise NotFoundError
+
+    def get_list_by_account_id(self, account_id: List[int]) -> dict:
+        try:
+            res = []
+            for account in account_id:
+                createds = self.model.objects.select_related("stock").filter(account_id=account)
+            for created in createds:
+                data = investinfo_stock_serializer(created).data
+                res.append(data)
+            return res
         except self.model.DoesNotExist:
             raise NotFoundError
 
