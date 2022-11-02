@@ -29,7 +29,7 @@ class UserRepo(AbstractUserRepo):
                 self.model.objects.prefetch_related("account_set")
                 .filter(account__number__exact=account_number)
                 .first()
-            )
+            ).data
         except self.model.DoesNotExist:
             raise NotFoundError
 
