@@ -2,6 +2,7 @@
 
 
 ```
+bash
 pip install -r requirements.txt
 python -m manage.py runserver
 ```
