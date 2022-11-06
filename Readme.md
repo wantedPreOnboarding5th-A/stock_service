@@ -12,253 +12,194 @@ python -m manage.py runserver
 
 본 프로젝트는 스웨거를 이용하여, 문서화 하였습니다.
 
+![image](https://user-images.githubusercontent.com/101803254/200189707-a11ae34f-5382-4248-885d-48b4de8dbd7a.png)
+
 서버 실행 후
 
 {host_url}/swagger 로 들어가시면, 문서를 확인할 수 있습니다.
 
+### GET, DELETE 의 경우 쿼리 파라미터로 받습니다.
+
 ## Database
+![Account-Book-Service](https://user-images.githubusercontent.com/101803254/200189740-2137c3ba-aed1-4b2d-9939-85738959b6d1.png)
 
-![SecondProject](https://user-images.githubusercontent.com/101803254/199444944-f0a7813e-5bf6-4fd3-ab24-1cfd9b59cb7b.png)
-
-csv에서 데이터를 가져와, DB에 넣을 때 기존 데이터와 비교를 위한 조회를 위해 약간의 역정규화를 추가하였습니다.
-
-## Scheduler
-
-django-apscheduler 라이브러리를 이용하여 개발하였습니다.
-
- batch 스크립트가 매일 새벽2시에 실행되도록 설정해두었습니다. 
-
-해당 cron 명령어는 config_real.yml의 batch_scheduler_cron_command 부분 에서 변경해줄 수 있습니다.
+프로젝트 내 config.config_example.yml 참고해서 config.yml 작성해주세요. 
 
 ```yaml
 databases:
-  host: "host url"
+  host: "localhost"
   port: 3306
-  database: "db name"
-  username: "username"
-  password: "passwd"
+  database: "account_book"
+  username: "db user name"
+  password: "db pw"
   timezone: "+09:00"
 
 secrets:
-  django: "django-something-something"
+  django: "django secret"
 
 token:
-  scret: "something_secret"
+  scret: "jwt secret"
+  referesh_expire_day: 7
   expire_sec: 3600
-
-batch_scheduler_cron_command:
-  minute: "0"
-  hour: "2"
-  day: "*"
-  month: "*"
-  year: "*"
 ```
 
 ## Features
 
 ---
 
-- 주어진 고객 투자 데이터를 응답하는 REST API 개발
-- Batch
-    - 제공된 테스트 데이터 셋을 API 에서 사용할 수 있도록 정제하여 로딩하는 batch script 를 작성해주세요.
-    데이터 셋은 그날의 데이터가 매일 새로 제공되는 것을 가정합니다. 따라서 데이터베이스에 저장된 데이터가 매일 최신 데이터로 갱신이 됩니다.
-    제공되는 테스트 데이터에는 오류 데이터가 포함될 수 있으며(잘못된 형식이나 적절하지 않은 값 등) 오류 데이터를 제외한 정상 데이터들은 모두 로딩이 되어야합니다.
-- 데이터 조회
-    - 데이터 셋에 포함된 특정 고객의 자산 정보를 조회하는 API 를 개발합니다.
-    개발할 API 의 응답이 사용되는 화면명과 필요한 데이터는 아래와 같습니다. (Figma comment 참조)
-    - [Figma 링크](https://www.figma.com/file/scym2fxvkdhcgssf8UuuDI/%ED%95%80%ED%8A%B8-%EC%84%9C%EB%B9%84%EC%8A%A4%EA%B0%9C%EB%B0%9C-%EA%B3%BC%EC%A0%9C?node-id=0%3A1)
-- batch
-    - 엑셀 파일 읽어오기
-    - 사용자 이름, 계좌번호 조회, 종목별 투자 내역 조회
-    - 엑셀 내역 validation
-        - 계좌번호 존재 및 사용자와 계좌번호 일치
-        - 투자내역의 ISIN 존재하는지 유효성 검사
-            - 새로 만들어지는 종목도 포함해야함
-        - 투자원금, 보유수량, 현재가 > 0
-    - 사용자 투자원금, 종목별 투자 내역, 종목  update 또는 create
-    
-- 로그인
-    - 로그인
-- 투자 화면
-    - 리턴 필드
-        
-        
-        | 이름 | 이름 |
-        | --- | --- |
-        | 증권사 | 증권사 |
-        | 계좌번호 | 계좌번호 |
-        | 계좌명 | 계좌명 |
-        | 총자산 | 모든 종목의 (현재가 * 보유수량) 의 총합 + 현금 |
-    - 기능:
-        - 사용자 정보 가져오기 (이름)
-        - 현재 가지고 있는, 펀드 목록 조회 (펀드 이름, 증권사(?), 총 수익금)
-    - 계좌명
-    - 증권사
-    - 계좌번호
-    - 계좌 총 자산
-- 투자상세 화면
-    - 리턴 필드
-        
-        
-        | 계좌명 | 계좌명 |
-        | --- | --- |
-        | 증권사 | 증권사 |
-        | 계좌번호 | 계좌번호 |
-        | 계좌 총자산 | 계좌 모든 종목의 (현재가 * 보유수량) 의 총합 |
-        | 투자원금 | 투자원금 |
-        | 총자산 | 모든 종목의 (현재가 * 보유수량) 의 총합 + 현금 |
-        | 총 수익금 | (총 자산 - 투자 원금) |
-        | 수익률 | (총 수익금 / 투자 원금 * 100) |
-    - 계좌명
-    - 증권사
-    - 계좌번호
-    - 계좌 총 자산
-    - 투자 원금
-    - 총 수익금 (총 자산 - 투자 원금)
-    - 수익률 (총 수익금 / 투자 원금 * 100)
-- 보유종목 화면 API
-    - 리턴 필드
-        
-        
-        | 보유 종목명 | 종목명 |
-        | --- | --- |
-        | 보유 종목의 자산군 | (자산 그룹) 컬럼 |
-        | 보유 종목의 평가 금액 | 현재가 * 보유수량 |
-        | 보유 종목 ISIN | ISIN |
-    - 기능 :
-        - 현재 가지고 있는 보유종목 과 보유종목별 금액(?) 가지고 오기
-    - 보유 종목명
-    - 보유 종목의 자산군
-    - 보유 종목의 평가 금액 (종목 보유 수량 * 종목 현재가)
-    - 보유 종목 ISIN
-- 투자금 입금
-    - 암호화, 복호화 (인증정보 사용)
-    - 입금 거래 정보 테이블에 insert
-    - 거래 후, 사용자 자산 업데이트
-
-### 투자금 입금
-
-투자금 입금은 2 phase 로 이루어 집니다. 
-
-### 암호화 알고리즘은 SHA256을 사용하였습니다.
-
-### Phase1 API
-
-입금 거래 정보들을 서버에 등록합니다.
+### 요구사항
 
 ---
 
-요청 데이터
-
-계좌번호
-
-고객명
-
-거래 금액
-
+- 고객은 이메일과 비밀번호 입력을 통해서 회원 가입을 할 수 있습니다.
+/signup
+body
 ```python
-계{
-"account_number": "123123",
-"user_name": "아이작",
-"transfer_amount": 1000
+{
+    "name": "이름",
+    "email": "test@test.com",
+    "password": "test1234"
+}
+```
+- 고객은 회원 가입이후, 로그인을 할 수 있습니다.
+/login
+body
+```python
+{
+    "email": "test@test.com",
+    "password": "test1234"
+}
+return {access:"token"}
+```
+- 로그인하지 않은 고객은 가계부 내역에 대한 접근 제한 처리가 되어야 합니다.
+헤더 Authorization에 붙은 토큰으로 제어합니다. 본인 이외에 조회, 수정, 삭제, 복구는 불가합니다.
+
+### 고객은 로그인 이후 가계부 관련 아래의 행동을 할 수 있습니다.
+
+- 가계부에 오늘 사용한 돈의 금액과 관련된 메모를 남길 수 있습니다.
+/account/create
+request
+```python
+{
+ "expend": 300123,
+ "memo":"돈을 많이 쓴 날"   
+}
+```
+response
+```python
+{
+    "id": 11,
+    "created_at": "2022-11-06T19:20:55.423043Z",
+    "expend": 3001232,
+    "memo": "돈을 많이 쓴 날",
+    "is_deleted": "V",
+    "deleted_at": null,
+    "recovered_at": null,
+    "user": 1
 }
 ```
 
-응답 데이터
-거래정보 식별자 - 요청 데이터 묶음을 식별할 수 있는 key 값
-
+- 가계부에서 수정을 원하는 내역은 금액과 메모를 수정 할 수 있습니다.
+/account/update
+request
+```python
+{"id":11,
+ "expend": 100,
+ "memo":"수정된 내용"   
+}
+```
+response
 ```python
 {
-	"transfer_identifier": 111
+    "id": 11,
+    "created_at": "2022-11-06T19:20:55.423043Z",
+    "expend": 100,
+    "memo": "수정된 내용",
+    "is_deleted": "V",
+    "deleted_at": null,
+    "recovered_at": null,
+    "user": 1
+}
+```
+- 가계부에서 삭제를 원하는 내역은 삭제 할 수 있습니다.
+account/delete?account_id=11
+**return**
+```python
+{
+    "id": 11,
+    "created_at": "2022-11-06T19:20:55.423043Z",
+    "expend": 100,
+    "memo": "수정된 내용",
+    "is_deleted": "I",
+    "deleted_at": "2022-11-07T04:24:08.918097Z",
+    "recovered_at": null,
+    "user": 1
+}
+```
+- 삭제한 내역은 언제든지 다시 복구 할 수 있어야 합니다.
+http://127.0.0.1:8000/account/recover?account_id=11
+return
+```python
+{
+    "id": 11,
+    "created_at": "2022-11-06T19:20:55.423043Z",
+    "expend": 100,
+    "memo": "수정된 내용",
+    "is_deleted": "V",
+    "deleted_at": "2022-11-07T04:24:08.918097Z",
+    "recovered_at": "2022-11-07T04:25:01.149142Z",
+    "user": 1
 }
 ```
 
-### Phase2 API
-
----
-
+-추가 : 이미 삭제된 내용을 삭제하거나 이미 복구된 내용을 복구하려 할경우 에러가 발생합니다.
+http://127.0.0.1:8000/account/recover?account_id=11
 ```python
-
 {
-	"account_number": "123123",
-	"user_name": "아이작",
-	"transfer_amount": 1000
-}
-{
-	"transfer_identifier": 111
+    "msg": "HTTP_403_FORBIDDEN : 잘못된 요청입니다"
 }
 ```
 
-- phase1 에서 등록한 거래정보 검증 후 실제 고객의 자산을 업데이트합니다.
-
-- 거래 정보를 hashing 하여 서버에 phase2 요청을 하면 서버에서는 phase1 에서 등록하여 저장된 데이터를 hashing 하여 동일한 데이터에 대한 요청인지 검증을 합니다.
-- 검증에 성공하면 고객의 총 자산을 업데이트하고 성공 응답을 하고, 검증 실패 시 자산 업데이트 없이 실패 응답을 합니다. 
-(hint: 입금된 금액은 현금 자산입니다.)
-- phase1 요청 데이터 계좌번호, 고객명, 거래 금액 순서로 연결한 string 을 hash한 string. -
-hash 알고리즘은 자유롭게 선택하여도 좋습니다.
-
+- 가계부에서 이제까지 기록한 가계부 리스트를 볼 수 있습니다.
+/account/list 
+```
+[
+    {
+        "id": 8,
+        "user_id": 1,
+        "expend": 300123,
+        "memo": "돈을 많이 쓴 날"
+    },
+    {
+        "id": 10,
+        "user_id": 1,
+        "expend": 300123,
+        "memo": "돈을 많이 쓴날"
+    },
+    {
+        "id": 11,
+        "user_id": 1,
+        "expend": 100,
+        "memo": "수정된 내용"
+    }
+]
+```
+- 가계부에서 상세한 세부 내역을 볼 수 있습니다.
+/account/details?account_id=11
+response
 ```python
 {
-	"signature": "82b64b05dfe897e1c2bce88a62467c084d79365af1", // "123123아이작1000" 을 sha512 hash 한 값.
-	"transfer_identifier": 111
+    "id": 11,
+    "created_at": "2022-11-06T19:20:55.423043Z",
+    "expend": 100,
+    "memo": "수정된 내용",
+    "is_deleted": "V",
+    "deleted_at": "2022-11-07T04:24:08.918097Z",
+    "recovered_at": "2022-11-07T04:25:01.149142Z",
+    "user": 1
 }
 ```
 
-phase1 에서 응답받은 거래정보 식별자
-
-응답 데이터
-입금 거래 결과
-
-```python
-{
-"status": true
-}
-```
-
-### 데이터셋 예제
-
----
-
-- account_asset_info_set.csv
-    
-    
-    | 고객이름 | 증권사 | 계좌번호 | 계좌명 | ISIN | 현재가 | 보유수량 |
-    | --- | --- | --- | --- | --- | --- | --- |
-    | 류영길 | 디셈버증권 | 5736692368320 | 계좌1 | KR7360750004 | 8585 | 21 |
-    | 류영길 | 디셈버증권 | 5736692368320 | 계좌1 | KR7133690008 | 14459 | 13 |
-    | 류영길 | 디셈버증권 | 5736692368320 | 계좌1 | KR7203780002 | 12707 | 12 |
-    | 류영길 | 디셈버증권 | 5736692368320 | 계좌1 | KR7200020006 | 7195 | 8 |
-    | 류영길 | 디셈버증권 | 5736692368320 | 계좌1 | KR7251350005 | 14210 | 7 |
-- account_basic_info_set.csv
-    
-    
-    | 계좌번호 | 투자원금 |
-    | --- | --- |
-    | 5736692368320 | 1911386 |
-    | 1573538006848 | 1744732 |
-    | 8699709932280 | 1454737 |
-    | 1623177400337 | 1482996 |
-    | 5961683984108 | 1247757 |
-    | 7564548104802 | 1075758 |
-    | 5608672867775 | 1621094 |
-    | 2426363594884 | 666939 |
-    | 6082439608037 | 1169109 |
-- asset_group_info_set.csv
-    
-    
-    | 종목명 | ISIN | 자산그룹 |
-    | --- | --- | --- |
-    | 미국S&P500 | KR7360750004 | 미국 주식 |
-    | 미국나스닥100 | KR7133690008 | 미국 주식 |
-    | 미국나스닥바이오 | KR7203780002 | 미국섹터 주식 |
-    | 미국S&P IT(합성) | KR7200020006 | 미국섹터 주식 |
-    | 선진국MSCI World | KR7251350005 | 선진국 주식 |
-    | 일본니케이225 | KR7241180009 | 선진국 주식 |
-    | 베트남VN30 | KR7245710009 | 신흥국 주식 |
-    | 신흥국MSCI | KR7195980008 | 신흥국 주식 |
-    | 전세계MSCI | KR7195980002 | 전세계 주식 |
-    | WTI원유선물 | KR7261220008 | 부동산 / 원자재 |
-    | S&P글로벌인프라 | KR7130680002 | 부동산 / 원자재 |
-    | 단기채권 | KR7153130000 | 채권 / 현금 |
-    | 미국장기우량회사채 | KR7332620004 | 채권 / 현금 |
-    | 현금 | CASH | 채권 / 현금 |
+### 차후 고도화 작업을 한다면
+1. 테스트 코드 커버리지를 상승
+2. 단위 테스트를 더 추가
